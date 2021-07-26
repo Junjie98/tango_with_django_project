@@ -25,7 +25,7 @@ SECRET_KEY = 'pyng$#)1!@*(v)nnq7#54u1nb$h#0_5m=(!j#ig&5aj$gll%7z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.56.1']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','192.168.56.1','100.81.197.12']
 
 
 # Application definition
