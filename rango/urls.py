@@ -8,4 +8,5 @@ app_name = 'rango'
 #we can employ reverse URL matching. This is we can reference the URL mapping by name rather than by the URL.
 urlpatterns = [ 
     path('', views.index, name='index'),
+    path('about/', views.about, name='about')
 ]
