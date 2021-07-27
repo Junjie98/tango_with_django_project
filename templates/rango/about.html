@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+{% load staticfiles %} <!-- informs Django's template engine
+that we will be using static files within the template
+this then enables us to access the media in the static
+directories via the use of static template tag -->
+
+<html>
+
+    <head>
+        <title>Rango</title>
+    </head>
+    <body>
+        <h1>Rango says... this is about and</h1>
+        <div>
+            hey there partner! <br />
+            <strong>{{ boldmessage }}</strong><br />
+        </div>
+        <div>
+            <a href='/'>Index</a><br />
+            <img src="{% static 'images/rango.jpg' %}"
+                alt="Picture of Rango" />
+        </div>
+    </body>
+
+</html>
