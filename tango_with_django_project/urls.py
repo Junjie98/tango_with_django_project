@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+
 #urlpatterns is a Python list, which is expected by Django framework.
 urlpatterns = [
     path('', views.index, name='index'),
