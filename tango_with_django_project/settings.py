@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates') #concatenate value of BASE_DIR and string templates.
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
 """
 The call to os.path.dirname() then provides the reference to the absolute path of the directory containing 
 the settings.py module. Calling os.path.dirname() again removes
@@ -123,5 +125,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+STATICFILES_DIRS = [STATIC_DIR, ]
 
+#the extra / at the end ensures that the root of the URL is separated from the static content you want to serve.
+#eg (/static/) --- (images/rango.jpg)
 STATIC_URL = '/static/'
