@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates') #concatenate value of BASE_DIR and string templates.
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 """
 The call to os.path.dirname() then provides the reference to the absolute path of the directory containing 
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -130,3 +132,7 @@ STATICFILES_DIRS = [STATIC_DIR, ]
 #the extra / at the end ensures that the root of the URL is separated from the static content you want to serve.
 #eg (/static/) --- (images/rango.jpg)
 STATIC_URL = '/static/'
+
+
+MEDIA_ROOT = MEDIA_DIR #that has been uploaded and stored
+MEDIA_URL = '/media/' #what url serve them from.
