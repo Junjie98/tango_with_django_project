@@ -4,6 +4,9 @@ class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     #unique means the given field's value must be unique thruout the underlying database table.
 
+    class Meta:
+        verbose_name_plural = 'Categories'
+
     def __str__(self):
         return self.name
 
