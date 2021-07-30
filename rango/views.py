@@ -17,16 +17,13 @@ def index(request):
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
-    context_dict['visits'] = int(request.COOKIES.get('visits', '1'))
-
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
 
     #return a rendered response to send to the client.
     #we make use of the shortcut function to make our lives easier
     #note that the first parameter is the template we wish to use.
     response = render(request, 'rango/index.html', context=context_dict)
-    
-    #call the helper function to handle the cookie
-    visitor_cookie_handler(request, response)
 
     #return response back to user. Update any cookies that requries changed.
     return response
@@ -207,29 +204,30 @@ def user_logout(request):
     return redirect(reverse('rango:index'))
 
 
-#takes in req and response because we want to be able to access incoming 
-#cookies and add or update the response cookie.
-def visitor_cookie_handler(request, response):
-    #this is to get the  num of visit to the site
-    #uses the cookies.get() to obtain the visit cookie
-    #if cookie exist, value returned is casted to an integer.
-    #if cookie doesnt exist, the default value is 1.
-    visits = int(request.COOKIES.get('visits', '1'))
+#helper method
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
 
-    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
     last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
 
     if(datetime.now() - last_visit_time).days > 0:
         visits = visits + 1
 
         #update last visit cookie now that we have already updated the count
-        response.set_cookie('last_visit', str(datetime.now()))
+        request.session['last_visit'] = str(datetime.now())
     else:
         # set the last visit cookie
-        response.set_cookie('last_visit', last_visit_cookie)
+        request.session['last_visit'] = last_visit_cookie
     
     #now, update or set the visit cookie
-    response.set_cookie('visits', visits)
+    request.session['visits'] = visits
 
     
 
