@@ -18,7 +18,6 @@ def index(request):
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
     visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
 
     #return a rendered response to send to the client.
     #we make use of the shortcut function to make our lives easier
@@ -29,7 +28,9 @@ def index(request):
     return response
 
 def about(request):
-    return render(request, 'rango/about.html')
+    context_dict = {}
+    context_dict['visits'] = request.session['visits']
+    return render(request, 'rango/about.html', context=context_dict)
 
 
 def show_category(request, category_name_slug):
