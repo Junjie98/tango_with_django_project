@@ -2,6 +2,14 @@ from django.urls import path
 from rango import views
 
 app_name = 'rango'
+#e means that any URL you reference from the
+#rango app is done so like:
+#<a href="{% url 'rango:about' %}">About</a>
+#the colon in the url command separates the namespace
+#from the actual URL name
+
+
+
 #the first parameter is the string to match in path.
 #the second parameter tells Django what view to call if the pattern '' is matched.
 #third parameter is optional called name. Convinient way to reference the view. & by naming our URL mapping
