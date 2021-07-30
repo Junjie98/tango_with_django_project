@@ -1,5 +1,7 @@
 from django import forms
-from rango.models import Page, Category
+from django.forms import fields
+from rango.models import Page, Category, UserProfile
+from django.contrib.auth.models import User
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length=Category.NAME_MAX_LENGTH, help_text="Please enter the category name.")
@@ -33,3 +35,19 @@ class PageForm(forms.ModelForm):
         exclude = ('category',)
         #or specify the fields to include (don't include the category field).
         #fields = ('title', 'url', 'views')
+
+#Note: nested Meta class describes additional properties about the
+#particular class to which it belongs. Each meta class must supply a model field.
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())#overwrites the default password attribute
+    #so that it hides the password input.
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture',)
+    
