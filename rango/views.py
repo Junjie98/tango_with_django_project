@@ -18,16 +18,20 @@ def index(request):
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
 
+    #COOKIES!
+    request.session.set_test_cookie()
+
     #return a rendered response to send to the client.
     #we make use of the shortcut function to make our lives easier
     #note that the first parameter is the template we wish to use.
     return render(request, 'rango/index.html', context=context_dict)
 
 def about(request):
-    #html = "<a href='/rango/'>Index</a>" 
-    #return HttpResponse("Rango says here is the about page." + html)
-    print(request.method)
-    print(request.user)
+    #COOKIES!
+    if request.session.test_cookie_worked():
+        print("TEST COOKIE WORKED!")
+        request.session.delete_test_cookie()
+
     return render(request, 'rango/about.html')
 
 
