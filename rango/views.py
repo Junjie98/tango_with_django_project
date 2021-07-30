@@ -5,7 +5,7 @@ from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+from datetime import datetime
 
 
 def index(request):
@@ -17,21 +17,21 @@ def index(request):
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
+    context_dict['visits'] = int(request.COOKIES.get('visits', '1'))
 
-    #COOKIES!
-    request.session.set_test_cookie()
 
     #return a rendered response to send to the client.
     #we make use of the shortcut function to make our lives easier
     #note that the first parameter is the template we wish to use.
-    return render(request, 'rango/index.html', context=context_dict)
+    response = render(request, 'rango/index.html', context=context_dict)
+    
+    #call the helper function to handle the cookie
+    visitor_cookie_handler(request, response)
+
+    #return response back to user. Update any cookies that requries changed.
+    return response
 
 def about(request):
-    #COOKIES!
-    if request.session.test_cookie_worked():
-        print("TEST COOKIE WORKED!")
-        request.session.delete_test_cookie()
-
     return render(request, 'rango/about.html')
 
 
@@ -205,3 +205,31 @@ def user_logout(request):
     logout(request)
     #throw them back to the homepage
     return redirect(reverse('rango:index'))
+
+
+#takes in req and response because we want to be able to access incoming 
+#cookies and add or update the response cookie.
+def visitor_cookie_handler(request, response):
+    #this is to get the  num of visit to the site
+    #uses the cookies.get() to obtain the visit cookie
+    #if cookie exist, value returned is casted to an integer.
+    #if cookie doesnt exist, the default value is 1.
+    visits = int(request.COOKIES.get('visits', '1'))
+
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+    if(datetime.now() - last_visit_time).days > 0:
+        visits = visits + 1
+
+        #update last visit cookie now that we have already updated the count
+        response.set_cookie('last_visit', str(datetime.now()))
+    else:
+        # set the last visit cookie
+        response.set_cookie('last_visit', last_visit_cookie)
+    
+    #now, update or set the visit cookie
+    response.set_cookie('visits', visits)
+
+    
+
