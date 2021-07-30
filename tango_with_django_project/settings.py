@@ -137,6 +137,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = MEDIA_DIR #that has been uploaded and stored
 MEDIA_URL = '/media/' #what url serve them from.
 
+LOGIN_URL = 'rango:login'
 #use this if i prefer Bcrypt. By default it uses PBKDF2 algorithm to hash.
 # PASSWORD_HASHERS = [
 # 'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',

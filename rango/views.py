@@ -3,6 +3,10 @@ from django.http import HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
+
 
 def index(request):
     #construct a dictionary to pass to the template engine as its context.
@@ -150,7 +154,43 @@ def register(request):
     return render(request, 'rango/register.html', context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
+def user_login(request):
+    #pull out the relevant information if it is a POST
+    ## We use request.POST.get('<variable>') as opposed
+    # to request.POST['<variable>'], because the
+    # request.POST.get('<variable>') returns None if the
+    # value does not exist, while request.POST['<variable>']
+    # will raise a KeyError exception.
 
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        #use Django's machinery to attempt to see if the user/password
+        #combination is valid. If valid, a user object is returned.
+        user = authenticate(username=username, password=password)
+
+        #if we have the user object then the details are correct.
+        #if none, no user with matching credentials was found.
+        if user:
+            #check if account is still active. (not disabled)
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('rango:index'))
+                #after login, send user back to the homepage
+            else:
+                return HttpResponse("Your Rango account is disabled.")
+        else:
+            #bad login
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    
+    #Request is not in HTTP POST, display the login form.
+    #would most likely be a HTTP GET
+    else:    
+        return render(request, 'rango/login.html')
 
             
-
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're logged in, you can see this text!")
